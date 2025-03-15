@@ -26,8 +26,8 @@ def read_excel(path, excel_file, sheet_name = "T08o"):
 
     
     # Extract the columns and convert them to NumPy arrays
-    real_mag = np.array(df['magred']) + 0.4  # Correction from the Red filter
-    real_mag = real_mag - 0.08 # Korekcija observatorijai
+    real_mag = np.array(df['magred']) + 0.33  # Correction from the Red filter
+    real_mag = real_mag - 0. # Korekcija observatorijai
     ph = df['Ph'].to_numpy(dtype = np.float64)
     epoch = df['epoch'].to_numpy(dtype = float)
     band = ["R"]*len(epoch)
@@ -131,6 +131,8 @@ def fit(phase, mag, weights=None, method="HG", mag_errors=None):
 
     if method == "HG":
         params.add("G", value=0.15, min=0, max=1.0)
+        #params['G'].vary = False
+        
     elif method == "HG1G2":
         params.add("G1", value=0.15, min=0, max=1.0)  # Free parameter
         params.add("G2", value = 0.2, min=0, max = 1.0)        # Dependent parameter ensuring G1 + G2 <= 1
@@ -262,6 +264,7 @@ def mag_area_HG(results, H_val, G_val, ph_an):
     
     # Construct covariance matrix for multivariate normal sampling
     params_mean = np.array([H_val, G_val])
+    #params_mean = np.array([H_val])
     
     # Just to make consistent the following code
     params_cov = cov_matrix
@@ -274,7 +277,10 @@ def mag_area_HG(results, H_val, G_val, ph_an):
 
     for i in range(n_samples):
         H_sample, G_sample = samples[i]
+        #H_sample = samples[i]
+        
         mag_samples[i] = hg_phase_function(H_sample, G_sample, ph_an)
+        #mag_samples[i] = hg_phase_function(H_sample, 0.15, ph_an)
     return mag_samples
 
 def mag_area_HG1G2(results, H_val_2, G1_val, G2_val, ph_an):
