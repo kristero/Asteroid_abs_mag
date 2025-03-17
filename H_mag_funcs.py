@@ -378,7 +378,7 @@ def comp_plot(ph, real_mag, H_MPC, asteroid_numb, plot_bool, save_fig, save_path
             plt.plot(ph_an, mag_analy_2, c="orange", label=r"HG1G2: H= {:.2f} $\pm$ {:.2f}, G1 = {:.2f} $\pm$ {:.2f}, G2 = {:.2f} $\pm$ {:.2f}".format(H_val_2, H_err_2, G1_val, G1_err, G2_val, G2_err))
             plt.fill_between(ph_an, mag_percentiles_2[0], mag_percentiles_2[1], color="orange", alpha=0.3, label="HG1G2 1-sigma uncertainty")
         
-        print ("Average displacement HG1G2: ", np.median(mag_analy_2 - mag_MPC))
+        #print ("Average displacement HG1G2: ", np.median(mag_analy_2 - mag_MPC))
 
     if plot_bool:
         plt.plot(ph_an, mag_MPC, c="blue", label="MPC: H= {}, G= 0.15".format(H_MPC))
@@ -396,7 +396,7 @@ def comp_plot(ph, real_mag, H_MPC, asteroid_numb, plot_bool, save_fig, save_path
             plt.savefig(save_path + asteroid_numb + "error_region")
         plt.show()
     
-    print ("Average displacement HG: ", np.median(mag_analy - mag_MPC))
+    #print ("Average displacement HG: ", np.median(mag_analy - mag_MPC))
     return [np.median(mag_analy - mag_MPC), np.median(mag_analy_2 - mag_MPC)]
 def interactive_data_removal(x, y, z):
     """
