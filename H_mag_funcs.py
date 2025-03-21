@@ -15,6 +15,28 @@ from sklearn.preprocessing import StandardScaler
 
 #%matplotlib widget
 #%matplotlib inline
+# reference: https://www.sciencedirect.com/science/article/pii/S0019103524004263
+filter_bias = {"B": 0.11,
+              "g": -0.325,
+              "c": -0.017, 
+              "V": 0.085,
+              "w": 0.111,
+              "r": 0.126,
+               "R": 0.282,
+               "G" : 0.154,
+               "o": 0.325,
+               "i": 0.334,
+               "I": 0.246,
+               "z": 0.287,
+               "y": 0.336,
+               "Y": 0.906,
+               "J": 1.362,
+               "H": 1.81,
+               "K": 1.835,
+               "-": -0.037,
+               "u": -2.436,
+               "C": 0.351
+              }
 
 def read_excel(path, excel_file, sheet_name = "T08o"):
     # Read the specified sheet into a DataFrame
@@ -24,9 +46,15 @@ def read_excel(path, excel_file, sheet_name = "T08o"):
     df['Ph'] = pd.to_numeric(df['Ph'], errors='coerce')          # Convert to numeric, NaN for invalid values
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
 
+    # Remove rows with any NaN values
+    df = df.dropna(subset=['magred'])
+
+    # extract bias
+    filter_name = sheet_name[-1]
+    filter_value = filter_bias[filter_name]
     
     # Extract the columns and convert them to NumPy arrays
-    real_mag = np.array(df['magred']) + 0.33  # Correction from the Red filter
+    real_mag = np.array(df['magred']) + filter_value  # Correction from the Red filter
     real_mag = real_mag - 0. # Korekcija observatorijai
     ph = df['Ph'].to_numpy(dtype = np.float64)
     epoch = df['epoch'].to_numpy(dtype = float)
